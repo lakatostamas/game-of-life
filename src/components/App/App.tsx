@@ -1,17 +1,11 @@
 import React from 'react';
+import Board from '../Board/Board';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <Board colsCount={50} rowsCount={50} />
+    </main>
   );
 }
 
