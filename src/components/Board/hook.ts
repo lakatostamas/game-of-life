@@ -79,6 +79,9 @@ export function useBoard(rowsCount: number, colsCount: number) {
     setGrid(originalGrid);
     setGeneration(0);
     setPopulationSize(getPopulationSize(originalGrid));
+
+    // not clear from spec, but I assume we should store the new state as originalState
+    setOriginalGrid(null);
   };
 
   const onStepForward = () => {
