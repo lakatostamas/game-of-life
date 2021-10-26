@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/components/Board/Board.module.css"],"names":[],"mappings":"AAAA,mBACE,YACF,CAEA,mBACE,UAAW,CACX,WAAY,CACZ,qBACF","file":"main.9c73b9ae.chunk.css","sourcesContent":[".grid {\n  display: grid;\n}\n\n.cell {\n  width: 20px;\n  height: 20px;\n  border: 1px solid #000;\n}\n"]}
