@@ -57,7 +57,9 @@ export function useBoard(rowsCount: number, colsCount: number) {
       return;
     }
 
-    setGrid(updateCell(grid, point));
+    const nextGrid = updateCell(grid, point);
+    setPopulationSize(getPopulationSize(nextGrid));
+    setGrid(nextGrid);
   };
 
   const onClear = () => {
