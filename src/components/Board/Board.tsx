@@ -1,5 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { generateLayout, generateNextState } from './utils';
+import React from 'react';
+import { useBoard } from './hook';
+import styles from './Board.module.css';
 
 interface IBoardProps {
   rowsCount: number;
@@ -8,60 +9,37 @@ interface IBoardProps {
 
 function Board(props: IBoardProps) {
   const { rowsCount = 0, colsCount = 0 } = props;
-  const [grid, setGrid] = useState(generateLayout(Math.max(rowsCount, 1), Math.max(colsCount, 1)));
-
-  const [isRunning, setIsRunning] = useState(false);
-
-  const runningRef = useRef(isRunning);
-  runningRef.current = isRunning;
-
-  const runSimulation = useCallback(() => {
-    if (!runningRef.current) {
-      return;
-    }
-
-    setGrid((grid) => generateNextState(grid));
-    setTimeout(runSimulation, 1000);
-  }, []);
-
-  const onToggleCell = (point: [number, number]) => {
-    const [x, y] = point;
-    const value = grid[x][y];
-
-    // there are other more performant ways to recreate this array
-    // for example: immer.js, but I did not want to introduce any
-    // extra dependency in this project
-    const nextGrid = grid.map((row, rowIdx) =>
-      row.map((field, colIdx) => {
-        if (rowIdx === x && colIdx === y) {
-          return value === 0 ? 1 : 0;
-        }
-
-        return field;
-      }),
-    );
-
-    setGrid(nextGrid);
-  };
+  const {
+    onStartStopClick,
+    onClear,
+    onReset,
+    onStepForward,
+    onToggleCell,
+    grid,
+    isRunning,
+    populationSize,
+    generation,
+  } = useBoard(rowsCount, colsCount);
 
   return (
     <>
-      <button
-        role="button"
-        onClick={() => {
-          setIsRunning(!isRunning);
-          runningRef.current = !isRunning;
-
-          if (!isRunning) {
-            runSimulation();
-          }
-        }}
-      >
+      <button role="button" onClick={onStartStopClick}>
         {isRunning ? 'stop' : 'start'}
       </button>
+      <button role="button" onClick={onClear}>
+        Clear
+      </button>
+      <button role="button" onClick={onReset}>
+        Reset
+      </button>
+      <button role="button" onClick={onStepForward}>
+        Step forward
+      </button>
+      <p>Population size: {populationSize}</p>
+      <p>Generation: {generation}</p>
       <div
+        className={styles.grid}
         style={{
-          display: 'grid',
           gridTemplateColumns: `repeat(${colsCount}, 20px)`,
         }}
       >
@@ -71,11 +49,10 @@ function Board(props: IBoardProps) {
               role="button"
               key={`${rowIdx}-${colIdx}`}
               onClick={() => onToggleCell([rowIdx, colIdx])}
+              className={styles.cell}
               style={{
-                width: 20,
-                height: 20,
-                backgroundColor: grid[rowIdx][colIdx] === 1 ? 'green' : 'transparent',
-                border: '1px solid black',
+                backgroundColor:
+                  grid[rowIdx][colIdx] === 1 ? 'green' : 'transparent',
               }}
             />
           )),
